@@ -34,7 +34,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     // SQLインジェクション処理
     $password = $mysqli->real_escape_string($_POST['password']);
     //passwordとidが一致の場合delete
-    $delete = $mysqli->query("DELETE `threads`, `messages` from `threads` INNER JOIN `messages` ON threads.id = messages.thread_id where threads.id = {$_POST['delete']} AND threads.password = '{$password}'");
+    $delete = $mysqli->query("DELETE from `threads` where threads.id = {$_POST['delete']} AND threads.password = '{$password}'");
     $delete_count = $mysqli->affected_rows;   //deleteの件数を取得
     if ($delete_count >= 1) {   //削除ができた場合
       print '<script>
@@ -120,7 +120,7 @@ $mysqli->close();
 
           <!-- スレッドの削除form -->
           <form action="" method="post">
-            <tr data-href="./message_see.php?id=<?= $id ?>">
+            <tr data-href="./message_make.php?id=<?= $id ?>">
               <td><?= $name ?></td>
               <td><?= $timestamp ?></td>
               <td>

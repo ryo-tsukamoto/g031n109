@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $delete = $mysqli->query("DELETE FROM `messages` WHERE id = {$_POST['id']} AND password = '{$password}'");
     $delete_count = $mysqli->affected_rows;   //deleteの件数を取得
     if ($delete_count == 1) {   //削除件数が１件の時
-      header("location: ./message_see.php?id={$_POST['thread_id']}");
+      header("location: ./message_make.php?id={$_POST['thread_id']}");
       exit();
     } elseif ($delete_count == 0) {   //パスワードが違う時エラーとを表示
       print '<script>
@@ -66,7 +66,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update = $mysqli->query("UPDATE `messages` SET `body`='{$body}' WHERE id= {$id} AND password = '{$password}'");
     $update_count = $mysqli->affected_rows;   //更新件数の取得
     if ($update_count == 1) {   //更新できた場合
-      header("location: ./message_see.php?id={$_POST['thread_id']}");
+      header("location: ./message_make.php?id={$_POST['thread_id']}");
       exit();
     } else {    //それ以外のエラー処理
       printf("Query failed: %s\n", $mysqli->error);
