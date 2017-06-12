@@ -68,7 +68,6 @@ $mysqli->close();
 <html>
 <head>
   <meta charset="utf-8">
-  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css"><!--フレームワーク-->
   <title>掲示板</title>
 </head>
 
@@ -77,9 +76,10 @@ $mysqli->close();
     <div class="page-header">
       <h1>スレッド一覧</h1>
     </div>
+    <Hr>
 
     <!-- 新規スレッドの作成 -->
-    <form name="thread" action="" method="post">
+    <form action="" method="post">
       <table class="table">
         <thead>
           <tr>
@@ -92,14 +92,15 @@ $mysqli->close();
           <tr>
             <td><input type="text" name="name" class="form-control"></td>
             <td><input type="password" name="password" class="form-control"></td>
-            <td><input type="submit" class="btn btn-info" value="投稿" onclick="check()"></td>
+            <td><input type="submit" class="btn btn-info" value="作成" onclick="check()"></td>
           </tr>
         </tbody>
       </table>
     </form>
+    <Hr>
 
     <!-- スレッドの表示 -->
-    <table class="table table-striped table-hover">
+    <table rules="all" class="table table-striped table-hover">
       <thead>
         <tr>
           <th style="width:30%;">スレッド名</th>
@@ -122,7 +123,7 @@ $mysqli->close();
             <tr>
               <!--スレッド名にそれぞれのスレッドへのリンクを貼る-->
               <td>
-                <a href="./message_make.php?id=<?= $id ?>" style="text-decoration:none"><?= $name ?></a>
+                <a href="./message_see.php?id=<?= $id ?>" style="text-decoration:none"><?= $name ?></a>
               </td>
               <td><?= $timestamp ?></td>
               <td>
@@ -143,7 +144,7 @@ $mysqli->close();
   <script language="JavaScript">
   function check() {
     if(document.thread.name.value == "" || document.bbs.password.value == "") { //新規スレッドフォームのnameかpasswordの値が空だった場合
-      alert("name,passwordを記入してください.");
+      alert("スレッド名、パスワードを記入してください.");
       return ;
     }
   }

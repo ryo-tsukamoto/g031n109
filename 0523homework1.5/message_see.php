@@ -13,7 +13,8 @@ if ($mysqli->connect_errno) {
 }
 
 //スレッドの読み込み　選択されているスレッドを一件読み込む
-$result = $mysqli->query('SELECT * FROM threads ORDER BY id DESC LIMIT 1');
+$query = "SELECT * FROM threads WHERE id = {$_GET['id']}";
+$result = $mysqli->query($query);
 if (!$result) {    //queryエラーの場合
   printf("Query failed: %s\n", $mysqli->error);
   exit();
@@ -43,6 +44,12 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   }
 }
 
+//thread_idを受け取り、スレッドのコメントの読み込み、messagesのid降順にする
+$query = "SELECT * FROM messages WHERE thread_id = {$_GET['id']} ORDER BY id DESC";
+$result = $mysqli->query($query);
+$result_count = $mysqli->affected_rows;   //resultの件数を取得
+
+
 //接続を閉じる
 $mysqli->close();
 
@@ -68,7 +75,7 @@ $mysqli->close();
     <Hr>
 
       <!-- 新規コメントの登録 -->
-      <form name="comment" action="message_see.php?id=<?= $id ?>" method="post">
+      <form action="message_see.php?id=<?= $id ?>" name="comment" action="" method="post">
         <table class="table">
           <thead>
             <tr>
@@ -90,6 +97,47 @@ $mysqli->close();
         </table>
       </form>
     </div>
+
+    <!-- コメントの表示 -->
+    <table rules="all" class="table table-striped">
+      <thead>
+        <tr>
+          <th style="width:15%;">Writer</th>
+          <th style="width:30%;">Body</th>
+          <th style="width:20%;">投稿日時</th>
+          <th>パスワード</th>
+          <th>編集</th>
+          <th>削除</th>
+        </tr>
+      </thead>
+      <tbody>
+      <Hr>
+
+          <!-- コメントの削除・編集form -->
+          <?php foreach ($result as $row): ?>
+          <form action="./massage_edit.php" method="post" name="bbs">
+            <tr>
+              <!--XSS対策-->
+              <td><?= htmlspecialchars($row['writer']) ?></td>
+              <td><?= htmlspecialchars($row['body']) ?></td>
+              <td><?= htmlspecialchars($row['timestamp']) ?></td>
+              <td>
+                <input type="password" name="password" class="form-control">
+                <input type="hidden" name="id" value="<?= htmlspecialchars($row['id']) ?>">
+                <input type="hidden" name="thread_id" value="<?= htmlspecialchars($row['thread_id']) ?>">
+              </td>
+              <td>
+                <input type="submit" name="bbs_update" value="編集" class="btn btn-warning">
+              </td>
+              <td>
+                <input type="submit" name="bbs_delete" value="削除" class="btn btn-danger">
+              </td>
+            </tr>
+          </form>
+          <?php endforeach; ?>
+      </tbody>
+    </table>
+  </div>
 
     <!-- 文字入力がない場合 -->
     <script language="JavaScript">

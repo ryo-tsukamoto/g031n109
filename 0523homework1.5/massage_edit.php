@@ -21,7 +21,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $delete = $mysqli->query("DELETE FROM `messages` WHERE id = {$_POST['id']} AND password = '{$password}'");
     $delete_count = $mysqli->affected_rows;   //message_make.phpで入力したパスワードと一致する、削除したいレコードの件数を取得
     if ($delete_count == 1) {   //削除件数が１件の時
-      header("location: ./message_make.php?id={$_POST['thread_id']}");
+      header("location: ./message_see.php?id={$_POST['thread_id']}");
       exit();
       //message_make/phpで入力されたパスワードが違う時パスワード入力画面へ戻る
     } elseif ($delete_count == 0) {
@@ -68,7 +68,7 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
     $update = $mysqli->query("UPDATE `messages` SET `body`='{$body}' WHERE id= {$id} AND password = '{$password}'");
     $update_count = $mysqli->affected_rows;   ///message_make.phpで入力したパスワードと一致する、更新したいレコードの件数を取得
     if ($update_count == 1) {   //更新が成功した場合、選択スレッドの閲覧画面に戻る
-      header("location: ./message_make.php?id={$_POST['thread_id']}");
+      header("location: ./message_see.php?id={$_POST['thread_id']}");
       exit();
     } else {    //それ以外のエラー処理
       printf("Query failed: %s\n", $mysqli->error);
@@ -85,7 +85,6 @@ $mysqli->close();
 <html>
   <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css">
     <title>掲示板</title>
   </head>
 
@@ -93,13 +92,14 @@ $mysqli->close();
     <div class="container">
       <div class="page-header">
         <h1>投稿内容の編集</h1>
-        <div style="text-align: right; margin: -5rem 0 10px;">
-          <button type="button" class="btn" onclick="location.href='./thread_action.php'">スレッド一覧へ戻る
-            <span class="glyphicon glyphicon-share-alt" aria-hidden="true"></span> <!--記号挿入-->
-          </button>
+          <form action="thread_action.php" style="text-align:">
+            <input type="submit" class="btn btn-info" value="スレッド一覧へ戻る">
+          </form>
       </div>
+    </div>
 
-      <table class="table table-striped">
+        <Hr>
+        <table rules="all" class="table table-striped">
         <thead>
           <tr>
             <th style="width:20%;">投稿者</th>
@@ -117,6 +117,8 @@ $mysqli->close();
             $id = htmlspecialchars($row['id']);
             $thread_id = htmlspecialchars($row['thread_id']);
           ?>
+
+          <Hr>
           <form name="edit" action="" method="post">
             <tbody>
               <tr>
@@ -139,7 +141,7 @@ $mysqli->close();
     <script language="JavaScript">
     function check() {
         if(document.edit.body.value == "") {   //コメント投稿欄が空欄だった場合
-          alert("bodyを記入してください.");
+          alert("本文を記入してください.");
           return ;
         }
     }
