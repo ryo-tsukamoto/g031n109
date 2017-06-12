@@ -33,15 +33,15 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
   if (isset($_POST['delete'])) {
     // SQLインジェクション処理
     $password = $mysqli->real_escape_string($_POST['password']);
-    //スレッドのpasswordとidが一致の場合、街頭スレッドを削除
+    //スレッドのpasswordとidが一致の場合、該当するスレッドを削除
     $delete = $mysqli->query("DELETE from `threads` where threads.id = {$_POST['delete']} AND threads.password = '{$password}'");
-    $delete_count = $mysqli->affected_rows;   //deleteの件数を取得
+    $delete_count = $mysqli->affected_rows;   //deleteする件数取得、すなわちパスワードが一致していた場合
     if ($delete_count >= 1) {   //削除ができた場合
       print '<script>
       alert("削除しました．");
       location.href = "./thread_action.php";
       </script>';
-    } elseif ($delete_count == 0) {   //パスワードが違う時エラーとを表示
+    } elseif ($delete_count == 0) {   //パスワードが違う時エラーを表示
       print '<script>
       alert("パスワードが違うか未入力です");
       location.href = "./thread_action.php";
@@ -118,7 +118,7 @@ $mysqli->close();
           $timestamp = htmlspecialchars($row['timestamp']);
           ?>
 
-          <!-- スレッドの削除form -->
+          <!-- スレッドの削除フォーム -->
           <form action="" method="post">
             <tr>
               <!--スレッド名にそれぞれのスレッドへのリンクを貼る-->

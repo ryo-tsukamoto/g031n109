@@ -47,7 +47,6 @@ if ($_SERVER['REQUEST_METHOD'] == 'POST') {
 //thread_idを受け取り、スレッドのコメントの読み込み、messagesのid降順にする
 $query = "SELECT * FROM messages WHERE thread_id = {$_GET['id']} ORDER BY id DESC";
 $result = $mysqli->query($query);
-$result_count = $mysqli->affected_rows;   //resultの件数を取得
 
 
 //接続を閉じる
